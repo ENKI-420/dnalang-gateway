@@ -1,0 +1,5 @@
+fastapi==0.109.0
+pydantic==2.5.3
+qiskit==1.0.0
+qiskit-ibm-runtime==0.18.0
+numpy==1.26.3

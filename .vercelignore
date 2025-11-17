@@ -1,0 +1,16 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.log
+.env
+.env.local
+*.md
+Dockerfile
+fly.toml
+render.yaml
+deploy-*.sh
+test-*.sh
