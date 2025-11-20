@@ -4,3 +4,12 @@ pydantic==2.5.3
 qiskit>=1.0.0
 qiskit-ibm-runtime>=0.30.0
 numpy==1.26.3
+
+# AURA Multi-Agent System Dependencies
+supabase==2.3.4
+postgrest==0.13.2
+stripe==8.0.0
+anthropic==0.18.1
+python-dotenv==1.0.0
+redis==5.0.1
+websockets==12.0

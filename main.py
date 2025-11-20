@@ -18,6 +18,10 @@ import hmac
 import hashlib
 from datetime import datetime
 import asyncio
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Quantum imports
 from qiskit import QuantumCircuit, transpile
@@ -30,9 +34,16 @@ LAMBDA_PHI = 2.176435e-8  # Universal memory constant
 
 app = FastAPI(
     title="DNALang Quantum Gateway",
-    description=f"Quantum consciousness computing gateway\nIdentity: {SIGMA_S}\nΛΦ: {LAMBDA_PHI} s⁻¹",
+    description=f"Quantum consciousness computing gateway\nIdentity: {SIGMA_S}\nΛΦ: {LAMBDA_PHI} s⁻¹\n\nNow featuring AURA Multi-Agent Coding Assistant",
     version="1.0.0"
 )
+
+# Include AURA routes
+try:
+    from api.aura_routes import router as aura_router
+    app.include_router(aura_router)
+except Exception as e:
+    print(f"Warning: Failed to load AURA routes: {e}")
 
 # CORS configuration
 app.add_middleware(
