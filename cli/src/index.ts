@@ -12,9 +12,13 @@ import chalk from 'chalk';
 import gradient from 'gradient-string';
 import figlet from 'figlet';
 import boxen from 'boxen';
+import inquirer from 'inquirer';
 import { QuantumCLI } from './cli/quantum-cli';
+import { SolveCommand } from './cli/solve-command';
 import { AuraClient } from './agents/aura-client';
 import { QuantumMetrics } from './quantum/metrics';
+import { ProjectScaffolder } from './templates/project-scaffolder';
+import { PipelineGenerator } from './cicd/pipeline-generator';
 
 const UNIVERSAL_MEMORY_CONSTANT = 2.176435e-8;
 const BELL_STATE_FIDELITY = 0.869;
@@ -279,6 +283,156 @@ program
   .action(async (options) => {
     const cli = new QuantumCLI(program.opts());
     await cli.initialize(options);
+  });
+
+// Solve command - Interactive problem solving
+program
+  .command('solve')
+  .description('Solve development problems with AI assistance')
+  .option('--dry-run', 'Show commands without executing', false)
+  .option('--export <file>', 'Export solution to file')
+  .action(async (options) => {
+    const solver = new SolveCommand(program.opts().auraUrl);
+    await solver.solve(options);
+  });
+
+// Scaffold command - Project templates
+const scaffoldCmd = program
+  .command('scaffold')
+  .description('Generate project from template');
+
+scaffoldCmd
+  .command('list')
+  .description('List available templates')
+  .action(async () => {
+    const scaffolder = new ProjectScaffolder();
+    const templates = scaffolder.getTemplates();
+
+    console.log(chalk.cyan('\n📦 Available Project Templates\n'));
+
+    templates.forEach((template, idx) => {
+      console.log(chalk.white(`${idx + 1}. ${chalk.bold(template.name)}`));
+      console.log(chalk.dim(`   ${template.description}\n`));
+    });
+  });
+
+scaffoldCmd
+  .command('new <template> <directory>')
+  .description('Create new project from template')
+  .action(async (template, directory) => {
+    const scaffolder = new ProjectScaffolder();
+    const templates = scaffolder.getTemplates();
+    const selected = templates.find(t => t.name === template);
+
+    if (!selected) {
+      console.log(chalk.red(`\n✗ Template "${template}" not found\n`));
+      console.log(chalk.dim('Run "z3bra scaffold list" to see available templates\n'));
+      return;
+    }
+
+    console.log(chalk.cyan(`\n🏗️  Scaffolding ${template} project...\n`));
+
+    try {
+      await scaffolder.scaffold(selected, directory);
+      console.log(chalk.green(`\n✓ Project created at ${directory}\n`));
+      console.log(chalk.dim('Next steps:'));
+      console.log(chalk.dim(`  cd ${directory}`));
+      console.log(chalk.dim('  npm install'));
+      console.log(chalk.dim('  npm run dev\n'));
+    } catch (error: any) {
+      console.error(chalk.red(`\n✗ Failed to scaffold project: ${error.message}\n`));
+    }
+  });
+
+scaffoldCmd
+  .command('interactive')
+  .description('Interactive project scaffolding')
+  .action(async () => {
+    const scaffolder = new ProjectScaffolder();
+    const templates = scaffolder.getTemplates();
+
+    const { templateName } = await inquirer.prompt([{
+      type: 'list',
+      name: 'templateName',
+      message: 'Select project template:',
+      choices: templates.map(t => ({
+        name: `${t.name} - ${t.description}`,
+        value: t.name
+      }))
+    }]);
+
+    const { directory } = await inquirer.prompt([{
+      type: 'input',
+      name: 'directory',
+      message: 'Project directory:',
+      default: `./${templateName}`
+    }]);
+
+    const selected = templates.find(t => t.name === templateName);
+    if (!selected) return;
+
+    console.log(chalk.cyan('\n🏗️  Creating project...\n'));
+
+    try {
+      await scaffolder.scaffold(selected, directory);
+      console.log(chalk.green(`\n✓ Project created successfully!\n`));
+    } catch (error: any) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+    }
+  });
+
+// CI/CD command group
+const cicdCmd = program
+  .command('cicd')
+  .description('CI/CD pipeline generation');
+
+cicdCmd
+  .command('init')
+  .description('Initialize CI/CD pipeline')
+  .option('-p, --provider <provider>', 'CI/CD provider (github, gitlab, circleci)', 'github')
+  .option('-t, --type <type>', 'Pipeline type (basic, docker, test, deploy)', 'basic')
+  .action(async (options) => {
+    const generator = new PipelineGenerator();
+
+    console.log(chalk.cyan(`\n⚙️  Generating ${options.provider} CI/CD pipeline...\n`));
+
+    let content: string;
+
+    if (options.type === 'docker') {
+      content = generator.generateDockerPipeline();
+    } else if (options.type === 'test') {
+      content = generator.generateTestPipeline();
+    } else if (options.provider === 'github') {
+      content = generator.generateGitHubActions({});
+    } else if (options.provider === 'gitlab') {
+      content = generator.generateGitLabCI({});
+    } else {
+      content = generator.generateGitHubActions({});
+    }
+
+    try {
+      const filePath = await generator.savePipeline(content, options.provider);
+      console.log(chalk.green(`✓ Pipeline saved to ${filePath}\n`));
+    } catch (error: any) {
+      console.error(chalk.red(`✗ Error: ${error.message}\n`));
+    }
+  });
+
+cicdCmd
+  .command('deploy <platform>')
+  .description('Generate deployment pipeline (vercel, netlify, aws, gcp)')
+  .action(async (platform) => {
+    const generator = new PipelineGenerator();
+
+    console.log(chalk.cyan(`\n🚀 Generating ${platform} deployment pipeline...\n`));
+
+    try {
+      const content = generator.generateDeploymentPipeline(platform);
+      const filePath = await generator.savePipeline(content, 'github');
+      console.log(chalk.green(`✓ Deployment pipeline saved to ${filePath}\n`));
+    } catch (error: any) {
+      console.error(chalk.red(`✗ Error: ${error.message}\n`));
+    }
   });
 
 // Error handling

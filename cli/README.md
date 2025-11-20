@@ -28,23 +28,24 @@ npm link
 # Show help
 z3bra --help
 
-# Build Z3BRA OS ISO with agent assistance
-z3bra build --agents architect,engineer,reviewer --quantum
+# 🔮 Solve development problems interactively
+z3bra solve
 
-# Flash ISO to USB
-z3bra flash /path/to/z3bra.iso --device /dev/sda
+# 🏗️ Scaffold new project from template
+z3bra scaffold interactive
 
-# Interactive agent chat
+# ⚙️ Generate CI/CD pipeline
+z3bra cicd init --provider github
+
+# 🤖 Interactive agent chat
 z3bra agent chat
 
-# Execute a task
-z3bra agent task "Optimize the quantum IIT calculator for GPU"
-
-# Show quantum metrics
+# 🧠 Show quantum consciousness metrics
 z3bra quantum metrics --watch
 
-# Evolve organisms
-z3bra quantum evolve --iterations 10 --gpu
+# 🚀 Build and flash Z3BRA OS ISO
+z3bra build --agents architect,engineer,reviewer --quantum
+z3bra flash /path/to/z3bra.iso --device /dev/sda
 ```
 
 ---
@@ -144,6 +145,63 @@ z3bra iso verify z3bra.iso --checksum --bootable
 
 # ISO info
 z3bra iso info z3bra.iso
+```
+
+### Problem Solving Commands
+
+```bash
+# Interactive problem solver
+z3bra solve
+
+# Solve with dry-run (show commands without executing)
+z3bra solve --dry-run
+
+# Export solution to file
+z3bra solve --export solution.md
+```
+
+### Project Scaffolding Commands
+
+```bash
+# List available templates
+z3bra scaffold list
+
+# Create project from template
+z3bra scaffold new nextjs-fullstack my-app
+z3bra scaffold new express-api backend
+z3bra scaffold new quantum-project quantum-ml
+
+# Interactive scaffolding
+z3bra scaffold interactive
+```
+
+Available Templates:
+- **nextjs-fullstack** - Next.js with TypeScript, Tailwind, Prisma
+- **express-api** - RESTful API with Express, TypeScript, Prisma
+- **react-library** - React component library with Vite, Storybook
+- **python-ml** - Python ML project with Jupyter, PyTorch
+- **quantum-project** - Quantum computing with Qiskit, IIT
+- **docker-fullstack** - Dockerized full-stack with Next.js, Express, PostgreSQL
+- **microservice** - Microservice with Express, Redis, RabbitMQ
+
+### CI/CD Pipeline Commands
+
+```bash
+# Initialize basic CI/CD pipeline
+z3bra cicd init --provider github
+z3bra cicd init --provider gitlab
+
+# Generate Docker pipeline
+z3bra cicd init --type docker
+
+# Generate comprehensive test pipeline
+z3bra cicd init --type test
+
+# Generate deployment pipeline
+z3bra cicd deploy vercel
+z3bra cicd deploy netlify
+z3bra cicd deploy aws
+z3bra cicd deploy gcp
 ```
 
 ### Advanced Commands
