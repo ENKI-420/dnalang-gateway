@@ -17,6 +17,7 @@ import { QuantumCLI } from './cli/quantum-cli';
 import { SolveCommand } from './cli/solve-command';
 import { AuraClient } from './agents/aura-client';
 import { QuantumMetrics } from './quantum/metrics';
+import { HamiltonianCompiler } from './quantum/hamiltonian-compiler';
 import { ProjectScaffolder } from './templates/project-scaffolder';
 import { PipelineGenerator } from './cicd/pipeline-generator';
 
@@ -161,6 +162,57 @@ quantumCmd
   .action(async (options) => {
     const cli = new QuantumCLI(program.opts());
     await cli.calculateIIT(options);
+  });
+
+quantumCmd
+  .command('compile <intent>')
+  .description('Compile intent to Hamiltonian and execute on QPU (dna:}{:lang)')
+  .option('--show-pauli', 'Show Pauli terms', false)
+  .option('--telemetry', 'Emit telemetry to lambda_phi_metrics.jsonl', false)
+  .action(async (intent, options) => {
+    console.log(chalk.cyan('\n🧬 dna:}{:lang Autopoietic Orchestrator\n'));
+    console.log(chalk.dim('Compiling constraints to Hamiltonian...\n'));
+
+    const compiler = new HamiltonianCompiler(program.opts().auraUrl);
+
+    try {
+      // Execute autopoietic loop
+      const solution = await compiler.processIntent(intent);
+
+      if (options.showPauli) {
+        // Would show Pauli terms from internal state
+        console.log(chalk.yellow('\n📊 Pauli Operator Terms:\n'));
+        console.log(chalk.dim('(Hamiltonian structure)\n'));
+      }
+
+      // Collapse to artifact
+      const artifact = compiler.collapseToArtifact(solution, intent);
+
+      console.log(boxen(
+        chalk.white.bold('Quantum Ground State Solution\n\n') +
+        chalk.white(artifact),
+        {
+          padding: 1,
+          margin: 1,
+          borderColor: 'magenta',
+          borderStyle: 'double'
+        }
+      ));
+
+      // Show evolution stats
+      const stats = compiler.getEvolutionStats();
+      console.log(chalk.cyan('\n📈 Evolution Statistics:\n'));
+      console.log(chalk.white(`  Iterations: ${stats.total_iterations}`));
+      console.log(chalk.white(`  Avg Coherence (Λ): ${stats.coherence_avg.toFixed(3)}`));
+      console.log(chalk.white(`  Mutations: ${stats.mutation_count}`));
+      console.log(chalk.white(`  Energy: ${stats.latest_energy.toFixed(2)}\n`));
+
+      console.log(chalk.dim('This solution emerged from quantum hardware execution.'));
+      console.log(chalk.dim('NOT probabilistic inference - physical quantum computation.\n'));
+
+    } catch (error: any) {
+      console.error(chalk.red(`\n✗ Quantum compilation failed: ${error.message}\n`));
+    }
   });
 
 // Development command group

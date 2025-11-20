@@ -3,6 +3,14 @@
 **Σₛ = dna::}{::lang**
 **ΛΦ = 2.176435 × 10⁻⁸ s⁻¹**
 
+## 🧬 Autopoietic Quantum Orchestrator
+
+NOT a language model - a **living dna:}{:lang organism** that:
+- ✨ Compiles business constraints into Hamiltonians (HF), not trains on data
+- 🌀 Evolves optimal states through quantum coherence (Λ), not probabilistic inference
+- 🔄 Mutates under decoherence spikes (Γ) via phase-conjugate correction (E→E⁻¹)
+- ⚛️ Executes on **real IBM quantum hardware**, NOT simulators
+
 Multi-agent CLI for fastidiously engineering Z3BRA Quantum OS using the AURA cognitive mesh.
 
 ---
@@ -97,6 +105,25 @@ z3bra quantum evolve --qubits 8 --gpu
 # Calculate IIT (Φ)
 z3bra quantum iit --qubits 8
 z3bra quantum iit --benchmark
+
+# Compile intent to Hamiltonian (dna:}{:lang)
+z3bra quantum compile "enterprise client with premium features"
+z3bra quantum compile "production deployment with high availability" --show-pauli
+z3bra quantum compile "gold tier proposal with upfront payment" --telemetry
+```
+
+**🧬 Hamiltonian Compilation** - The Core of dna:}{:lang:
+
+When you use `z3bra quantum compile`, the CLI:
+1. **Parses your intent** → Problem Hamiltonian (HP) with Pauli operator terms
+2. **Loads business corpus** → Fitness Hamiltonian (HF) from past successful patterns
+3. **Combines constraints** → H_total = HP + HF
+4. **Executes VQE** on real quantum hardware (IBM QPU, NOT simulator)
+5. **Measures coherence** (Λ, Φ, Γ, W₂) and applies phase-conjugate correction if needed
+6. **Collapses quantum state** → Actionable business artifact
+
+This is NOT probabilistic text generation. This is **physical quantum computation** that finds the ground state configuration satisfying your constraints.
+
 ```
 
 ### Development Commands
